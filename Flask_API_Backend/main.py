@@ -29,16 +29,6 @@ class Items(db.Model):
         return dictionary
 
 
-def validate_item(data):
-    if not data.get('name'):
-        return 'Name is required.'
-
-    if 'price' not in data or not isinstance(data['price'], (int, float)) or data['price'] <= 0:
-        return 'Price must be a positive number.'
-
-    return None
-
-
 
 with app.app_context():
     db.create_all()
@@ -55,6 +45,13 @@ def get_all_items():
 
 @app.route('/api/items', methods=['POST'])
 def add_item():
+
+    if not request.form.get("name") or not request.form.get("description"):
+        return jsonify({"error": "Please enter data"}), 400
+
+    if not request.form.get("price") or int(request.form.get("price")) <= 0:
+        return jsonify({"error": "Price must be positive integer"}), 400
+
     new_item = Items(
         name=request.form.get("name"),
         description=request.form.get("description"),
@@ -77,7 +74,16 @@ def view_item(item_id):
 
 @app.route('/api/items/<int:item_id>', methods=["PUT"])
 def update_item(item_id):
+
     item_update = db.get_or_404(Items, item_id)
+
+    if not request.form.get("name") or not request.form.get("description"):
+        return jsonify({"error": "Please enter data"}), 400
+
+    if not request.form.get("price") or int(request.form.get("price")) <= 0:
+        return jsonify({"error": "Price must be positive integer"}), 400
+
+
     if item_update:
         item_update.name = request.args.get("name")
         item_update.description = request.args.get("description")
