@@ -2,8 +2,12 @@ from flask import Flask, jsonify, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Boolean
+from flask_cors import CORS
+
 
 app = Flask(__name__)
+# cross-origin resource sharing
+CORS(app)
 
 # CREATE DB
 class Base(DeclarativeBase):
@@ -60,7 +64,7 @@ def add_item():
 
     db.session.add(new_item)
     db.session.commit()
-    return jsonify(response={"success": "Successfully added the new item"})
+    return jsonify(response={"Success": "Successfully added the new item"})
 
 @app.route('/api/items/<int:item_id>', methods=["GET"])
 def view_item(item_id):
@@ -72,26 +76,51 @@ def view_item(item_id):
         return jsonify(error={"Not Found": "Sorry, we don't have that item"})
 
 
+# @app.route('/api/items/<int:item_id>', methods=["PUT"])
+# def update_item(item_id):
+#
+#     item_update = db.get_or_404(Items, item_id)
+#
+#     if not request.form.get("name") or not request.form.get("description"):
+#         return jsonify({"error": "Please enter data"}), 400
+#
+#     if not request.form.get("price") or int(request.form.get("price")) <= 0:
+#         return jsonify({"error": "Price must be positive integer"}), 400
+#
+#
+#     if item_update:
+#         item_update.name = request.args.get("name")
+#         item_update.description = request.args.get("description")
+#         item_update.price = request.args.get("price")
+#         db.session.commit()
+#         return jsonify(response={"Success": "Successfully updated the item."}), 200
+#     else:
+#         return jsonify(error={"Not Found": "Sorry the item with that id was not found in the database"}), 404
+
 @app.route('/api/items/<int:item_id>', methods=["PUT"])
 def update_item(item_id):
-
     item_update = db.get_or_404(Items, item_id)
 
-    if not request.form.get("name") or not request.form.get("description"):
+    data = request.get_json()  # Get JSON data from request
+    name = data.get("name")
+    description = data.get("description")
+    price = data.get("price")
+
+    if not name or not description:
         return jsonify({"error": "Please enter data"}), 400
 
-    if not request.form.get("price") or int(request.form.get("price")) <= 0:
+    if not price or int(price) <= 0:
         return jsonify({"error": "Price must be positive integer"}), 400
 
 
-    if item_update:
-        item_update.name = request.args.get("name")
-        item_update.description = request.args.get("description")
-        item_update.price =request.args.get("price")
-        db.session.commit()
-        return jsonify(response={"success": "Successfully updated the item."}), 200
-    else:
-        return jsonify(error={"Not Found": "Sorry the item with that id was not found in the database"}), 404
+    item_update.name = name
+    item_update.description = description
+    item_update.price = price
+    db.session.commit()
+
+    return jsonify(response={"Success": "Successfully updated the item."}), 200
+
+
 
 @app.route('/api/items/<int:item_id>', methods=['DELETE'])
 def delete_item(item_id):
