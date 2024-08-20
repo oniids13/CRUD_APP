@@ -1,6 +1,5 @@
 # CRUD_APP
 
-Assessment Exam
 
 # Flask-React CRUD Application
 
