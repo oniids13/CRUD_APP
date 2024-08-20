@@ -5,7 +5,7 @@ import Home from './pages/Home';
 import ItemDetail from './pages/ItemDetail';
 import CreateItem from './pages/CreateItem';
 import App from './App';
-import './index.css';
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

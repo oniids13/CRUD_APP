@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createItem } from '../api';
+import { Link } from "react-router-dom";
 
 function CreateItem() {
   const [name, setName] = useState('');
@@ -36,29 +37,41 @@ function CreateItem() {
   };
 
   return (
-    <div>
+    <div className='create-item'>
       <h2>Create New Item</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
-        />
-        <input
-          type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Description"
-        />
-        <input
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          placeholder="Price"
-        />
-        <button type="submit">Create Item</button>
+      <form className='create-form' onSubmit={handleSubmit}>
+        <div>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name"
+            required
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Description"
+            required
+          />
+        </div>
+        <div>
+          <input
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            placeholder="Price"
+            required
+          />
+        </div>
+        <button className='btn-create' type="submit">Create Item</button>
+        <div className='back' >
+            <Link to="/">Back</Link>
+            </div>
       </form>
     </div>
   );
