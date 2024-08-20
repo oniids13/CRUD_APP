@@ -76,32 +76,11 @@ def view_item(item_id):
         return jsonify(error={"Not Found": "Sorry, we don't have that item"})
 
 
-# @app.route('/api/items/<int:item_id>', methods=["PUT"])
-# def update_item(item_id):
-#
-#     item_update = db.get_or_404(Items, item_id)
-#
-#     if not request.form.get("name") or not request.form.get("description"):
-#         return jsonify({"error": "Please enter data"}), 400
-#
-#     if not request.form.get("price") or int(request.form.get("price")) <= 0:
-#         return jsonify({"error": "Price must be positive integer"}), 400
-#
-#
-#     if item_update:
-#         item_update.name = request.args.get("name")
-#         item_update.description = request.args.get("description")
-#         item_update.price = request.args.get("price")
-#         db.session.commit()
-#         return jsonify(response={"Success": "Successfully updated the item."}), 200
-#     else:
-#         return jsonify(error={"Not Found": "Sorry the item with that id was not found in the database"}), 404
-
 @app.route('/api/items/<int:item_id>', methods=["PUT"])
 def update_item(item_id):
     item_update = db.get_or_404(Items, item_id)
 
-    data = request.get_json()  # Get JSON data from request
+    data = request.get_json()
     name = data.get("name")
     description = data.get("description")
     price = data.get("price")
